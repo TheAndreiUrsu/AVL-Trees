@@ -7,7 +7,15 @@
 */
 
 int main(){
+
+	// Testing insert. 
 	AVL_Tree test;
+
+	AVL_Node* root = test.insertNode("James", "86230819");
+	test.insertNode("Barbara", "96238791", root);
+	test.insertNode("Elias", "78941364", root);
+	test.printTree();
+
 	return 0;
 }
 
