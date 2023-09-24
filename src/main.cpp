@@ -1,5 +1,5 @@
 #include <iostream>
-#include "tree.h"
+#include "avl_tree_node.h"
 
 /* Note: 
 	1. You will have to comment main() when unit testing your code because catch uses its own main().
@@ -9,12 +9,11 @@
 int main(){
 
 	// Testing insert. 
-	AVL_Tree test;
 
-	AVL_Node* root = test.insertNode("James", "86230819");
-	test.insertNode("Barbara", "96238791", root);
-	test.insertNode("Elias", "78941364", root);
-	test.printTree();
+	AVL_Tree AT;
+	AT.insertNode("James", 86230819);
+	AT.insertNode("Barbara", 96238791);
+	AT.printTree();
 
 	return 0;
 }
