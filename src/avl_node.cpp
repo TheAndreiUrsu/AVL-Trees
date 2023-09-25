@@ -1,5 +1,7 @@
 #include "avl_tree_node.h"
 
-bool AVL_Node::operator>(const AVL_Node* rhs) {
-	return this->key > rhs->key;
+AVL_Node::AVL_Node(int key) {
+	this->key = key;
+	this->left = nullptr;
+	this->right = nullptr;
 }
