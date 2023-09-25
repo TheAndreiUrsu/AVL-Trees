@@ -15,7 +15,7 @@ AVL_Node* AVL_Tree::insertNodeHelper(AVL_Node* root, int key) {
 		return new_node;
 
 	// Check if it is less than, to go to left subtree, else go to right subtree.
-	if (new_node < root)
+	if (new_node->key < root->key)
 		root->left = insertNodeHelper(root->left, key);
 	else
 		root->right = insertNodeHelper(root->right, key);
@@ -39,4 +39,56 @@ void AVL_Tree::inOrderHelper(AVL_Node* root) {
 }
 void AVL_Tree::inOrder() {
 	this->inOrderHelper(this->root);
+}
+
+void AVL_Tree::postOrderHelper(AVL_Node* root)
+{
+	if (root == nullptr) {
+		std::cout << "";
+	}
+	else {
+		postOrderHelper(root->left);
+		postOrderHelper(root->right);
+		std::cout << root->key << " ";
+	}
+}
+void AVL_Tree::postOrder()
+{
+	this->postOrderHelper(this->root);
+}
+
+void AVL_Tree::preOrderHelper(AVL_Node* root)
+{
+	if (root == nullptr) {
+		std::cout << "";
+	}
+	else {
+		std::cout << root->key << " ";
+		preOrderHelper(root->left);
+		preOrderHelper(root->right);
+	}
+}
+void AVL_Tree::preOrder()
+{
+	this->preOrderHelper(this->root);
+}
+
+
+
+int AVL_Tree::treeHeightHelper(AVL_Node* root) {
+	if (root->left == nullptr && root->right == nullptr) {
+		return 1;
+	}
+	else {
+		if (root->left != nullptr) {
+			return 1 + treeHeightHelper(root->left);
+		}
+		if (root->right != nullptr) {
+			return 1 + treeHeightHelper(root->right);
+		}
+	}
+}
+int AVL_Tree::treeHeight()
+{
+	return treeHeightHelper(this->root);
 }
