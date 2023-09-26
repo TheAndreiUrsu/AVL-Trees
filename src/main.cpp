@@ -31,11 +31,23 @@ int main(){
 	test.insertNode(45);
 	test.insertNode(50);
 
-	test.inOrder();
+	std::vector<int> in_order = test.inOrder();
+	std::cout << "In Order Traversal: ";
+	for (unsigned int i = 0; i < in_order.size(); ++i) {
+		cout << in_order.at(i) << " ";
+	}
 	std::cout << std::endl;
-	test.preOrder();
+	vector<int> pre_order = test.preOrder();
+	std::cout << "Pre Order Traversal: ";
+	for (unsigned int i = 0; i < pre_order.size(); ++i) {
+		cout << pre_order.at(i) << " ";
+	}	
 	std::cout << std::endl;
-	test.postOrder();
+	vector<int> post_order = test.postOrder();
+	std::cout << "Post Order Traversal: ";
+	for (unsigned int i = 0; i < post_order.size(); ++i) {
+		cout << post_order.at(i) << " ";
+	}
 	std::cout << std::endl;
 	std::cout << "Tree height: " << test.treeHeight() << std::endl;
 
