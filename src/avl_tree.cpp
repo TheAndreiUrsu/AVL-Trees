@@ -20,6 +20,19 @@ AVL_Node* AVL_Tree::insertNodeHelper(AVL_Node* root, int key) {
 	else
 		root->right = insertNodeHelper(root->right, key);
 
+	/*
+		IF tree is right heavy
+			IF tree's right subtree is left heavy
+				Perform Right Left Rotation
+			ELSE
+				Perform Left rotation
+		ELSE IF tree is left heavy
+			IF tree's left subtree is right heavy
+				Perform Left Right rotation
+			ELSE
+				Perform Right rotation
+	*/
+
 	return root;
 }
 void AVL_Tree::insertNode(int key) {
@@ -28,49 +41,57 @@ void AVL_Tree::insertNode(int key) {
 
 /*===== DFS Traversals =====*/
 void AVL_Tree::inOrderHelper(AVL_Node* root) {
-	if (root == nullptr) {
-		std::cout << "";
-	}
-	else {
+
+	if (root != nullptr) {
 		inOrderHelper(root->left);
-		std::cout << root->key << " ";
+		this->in_order.push_back(root->key);
 		inOrderHelper(root->right);
 	}
+
 }
-void AVL_Tree::inOrder() {
+std::vector<int> AVL_Tree::inOrder() {
+	if (this->in_order.size() > 0) {
+		return this->in_order;
+	}
+
 	this->inOrderHelper(this->root);
+	return this->in_order;
 }
 
 void AVL_Tree::postOrderHelper(AVL_Node* root)
 {
-	if (root == nullptr) {
-		std::cout << "";
-	}
-	else {
+	if (root != nullptr) {
 		postOrderHelper(root->left);
 		postOrderHelper(root->right);
-		std::cout << root->key << " ";
+		this->post_order.push_back(root->key);
 	}
 }
-void AVL_Tree::postOrder()
+std::vector<int> AVL_Tree::postOrder()
 {
+	if (this->post_order.size() > 0) {
+		return this->post_order;
+	}
+
 	this->postOrderHelper(this->root);
+	return this->post_order;
 }
 
 void AVL_Tree::preOrderHelper(AVL_Node* root)
 {
-	if (root == nullptr) {
-		std::cout << "";
-	}
-	else {
-		std::cout << root->key << " ";
+	if (root != nullptr) {
+		this->pre_order.push_back(root->key);
 		preOrderHelper(root->left);
 		preOrderHelper(root->right);
 	}
 }
-void AVL_Tree::preOrder()
+std::vector<int> AVL_Tree::preOrder()
 {
+	if (this->pre_order.size() > 0) {
+		return this->pre_order;
+	}
+	
 	this->preOrderHelper(this->root);
+	return this->pre_order;
 }
 
 
