@@ -8,7 +8,8 @@ public:
 	friend class AVL_Tree;
 private:
 	int key;
-	int balance_factor;
+	int balance_factor; // Height of left subtree - height of right subtree
+	int height;
 
 	bool is_leaf;
 
@@ -17,8 +18,6 @@ private:
 
 	AVL_Node() {};
 	AVL_Node(int key);
-
-	
 };
 
 class AVL_Tree {
@@ -31,9 +30,13 @@ private:
 	std::vector<int> post_order;
 	std::vector<int> pre_order;
 
+	std::vector<AVL_Node*> tree_vect;
+
 	void inOrderHelper(AVL_Node* root);
 	void postOrderHelper(AVL_Node* root);
 	void preOrderHelper(AVL_Node* root);
+
+	void treeHelper(AVL_Node* root);
 
 	int treeHeightHelper(AVL_Node* root);
 
@@ -50,6 +53,14 @@ public:
 	std::vector<int> postOrder();
 	std::vector<int> preOrder();
 
+	/*===== Tree Height =====*/
 	int treeHeight();
 
+	/*===== Rotations =====*/
+	AVL_Node* rightRotate(AVL_Node* root);
+	AVL_Node* leftRotate(AVL_Node* root);
+
+	/*===== Debugging =====*/
+	void printHeightAndBalanceFactor();
+	std::vector<AVL_Node*> getTree();
 };
