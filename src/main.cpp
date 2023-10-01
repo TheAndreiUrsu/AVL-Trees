@@ -13,23 +13,15 @@ int main(){
 
 	AVL_Tree test;
 
-	test.insertNode(25);
-	test.insertNode(20);
-	test.insertNode(36);
-	test.insertNode(10);
-	test.insertNode(22);
-	test.insertNode(30);
-	test.insertNode(40);
-	test.insertNode(5);  
-	test.insertNode(12);
-	test.insertNode(28);
-	test.insertNode(38);
-	test.insertNode(48);
-	test.insertNode(1);
-	test.insertNode(8);
-	test.insertNode(15);
-	test.insertNode(45);
-	test.insertNode(50);
+	for (int i = 0; i < 50; ++i) {
+		test.insertNode(i);
+	}
+
+	cout << "----Debugging----" << endl;
+
+	test.getTree();
+	test.printHeightAndBalanceFactor();
+	cout << endl;
 
 	std::vector<int> in_order = test.inOrder();
 	std::cout << "In Order Traversal: ";
@@ -49,7 +41,6 @@ int main(){
 		cout << post_order.at(i) << " ";
 	}
 	std::cout << std::endl;
-	std::cout << "Tree height: " << test.treeHeight() << std::endl;
 
 	return 0;
 }
