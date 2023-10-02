@@ -17,36 +17,38 @@ AVL_Node* AVL_Tree::insertNodeHelper(AVL_Node* root, int key) {
 		
 	// Check if it is less than, to go to left subtree, else go to right subtree.
 	if (new_node->key < root->key)
-		root->left = insertNodeHelper(root->left, key);
+        root->left = insertNodeHelper(root->left, key);
 	else
-		root->right = insertNodeHelper(root->right, key);
+        root->right = insertNodeHelper(root->right, key);
 
 	// Update height of node
 	root->height = std::max(treeHeightHelper(root->left), treeHeightHelper(root->right));
 
-	root->balance_factor = treeHeightHelper(root->left) - treeHeightHelper(root->right);
+    root->balance_factor = treeHeightHelper(root->left) - treeHeightHelper(root->right);
 
 	// Right heavy
-	if (root->balance_factor < -1 && key > root->right->key) {
-		AVL_Node* right_subtree = root->right;
-		if (right_subtree->balance_factor > 1 && key < right_subtree->left->key) {
-			right_subtree = rightRotate(right_subtree);
-			return leftRotate(root);
-		}
-		else
-			return leftRotate(root);
-	}
-	// Left heavy
-	if (root->balance_factor > 1 && key < root->left->key) {
-		AVL_Node* left_subtree = root->left;
-		if (left_subtree->balance_factor < -1 && key > left_subtree->right->key) {
-			left_subtree = leftRotate(left_subtree);
-			return rightRotate(root);
-		}
-		else
-			return rightRotate(root);
-		
-	}
+	if(root->balance_factor < -1){
+        std::cout << "Tree is right heavy!" << std::endl;
+        if(key < root->right->key){
+            std::cout << "Subtree is left heavy!" << std::endl;
+            return rightLeftRotate(root);
+        }
+        else{
+            std::cout << "Subtree is right heavy!" << std::endl;
+            return leftRotate(root);
+        }
+    }
+    else if(root->balance_factor > 1){
+        std::cout << "Tree is left heavy!" << std::endl;
+        if(key > root->left->key){
+            std::cout << "Subtree is right heavy!" << std::endl;
+            return leftRightRotate(root);
+        }
+        else{
+            std::cout << "Subtree is left heavy!" << std::endl;
+            return rightRotate(root);
+        }
+    }
 
 	/*
 		IF tree is right heavy
@@ -68,36 +70,45 @@ void AVL_Tree::insertNode(int key) {
 }
 
 AVL_Node* AVL_Tree::rightRotate(AVL_Node* root) {
-	std::cout << "Rotating Right!" << std::endl;
-	
-	AVL_Node* child = root->left;
-	AVL_Node* right_child_of_child = child->right; // could be null or exists
+	std::cout << "Rotating right!" << std::endl;
 
-	child->left = root;
-	root->right = right_child_of_child;
+    AVL_Node* child = root->left;
+    root->left = child->right;
+    child->right = root;
 
-	// Updating heights and balance factors of child.
-	child->height = std::max(treeHeightHelper(child->left), treeHeightHelper(child->right));
-	child->balance_factor = treeHeightHelper(child->left) - treeHeightHelper(child->right);
-
-	// Return the new root of the rotated subtree.
-	return child;
+    // Return the new root of the rotated subtree.
+    return changeBalanceAndHeight(child);
 }
+
 AVL_Node* AVL_Tree::leftRotate(AVL_Node* root) {
 	std::cout << "Rotating Left!" << std::endl;
-	
-	AVL_Node* child = root->right;
-	AVL_Node* left_child_of_child = child->left; // could be null or exists
 
-	child->left = root;
-	root->right = left_child_of_child;
+    AVL_Node* child = root->right;
+    root->right = child->left;
+    child->left = root;
 
-	// Updating heights and balance factors of root and child.
-	child->height = std::max(treeHeightHelper(child->left), treeHeightHelper(child->right));
-	child->balance_factor = treeHeightHelper(child->left) - treeHeightHelper(child->right);
+    // Return the new root of the rotated subtree.
+	return changeBalanceAndHeight(child);
+}
 
-	// Return the new root of the rotated subtree.
-	return child;
+AVL_Node *AVL_Tree::rightLeftRotate(AVL_Node* root) {
+    AVL_Node* left_child_of_root_right_child = root->right->left;
+    AVL_Node* right_child_of_root = root->right;
+
+    root->right = left_child_of_root_right_child;
+    root->right->right = right_child_of_root;
+
+    return leftRotate(root);
+}
+
+AVL_Node *AVL_Tree::leftRightRotate(AVL_Node* root) {
+    AVL_Node* right_child_of_root_left_child = root->left->right;
+    AVL_Node* left_child_of_root = root->left;
+
+    root->left = right_child_of_root_left_child;
+    root->left->left = left_child_of_root;
+
+    return rightRotate(root);
 }
 
 /*===== DFS Traversals =====*/
@@ -157,13 +168,13 @@ std::vector<int> AVL_Tree::preOrder()
 
 
 
-int AVL_Tree::treeHeightHelper(AVL_Node* root) {
+int AVL_Tree::treeHeightHelper(AVL_Node* avl_root) {
 	
-	if (root == nullptr)
+	if (avl_root == nullptr)
 		return 0;
 	else {
-		//std::cout << "Root: " << root->key << std::endl;
-		return 1 + std::max((root->left ? treeHeightHelper(root->left) : 0), (root->right ? treeHeightHelper(root->right) : 0));
+		//std::cout << "Root: " << avl_root->key << std::endl;
+		return 1 + std::max((avl_root->left ? treeHeightHelper(avl_root->left) : 0), (avl_root->right ? treeHeightHelper(avl_root->right) : 0));
 	}
 	
 }
@@ -182,17 +193,51 @@ std::vector<AVL_Node*> AVL_Tree::getTree() {
 	this->treeHelper(this->root);
 	return this->tree_vect;
 }
-void AVL_Tree::treeHelper(AVL_Node* root) {
-	if (root != nullptr) {
-		treeHelper(root->left);
-		this->tree_vect.push_back(root);
-		treeHelper(root->right);
+void AVL_Tree::treeHelper(AVL_Node* avl_root) {
+	if (avl_root != nullptr) {
+		treeHelper(avl_root->left);
+		this->tree_vect.push_back(avl_root);
+		treeHelper(avl_root->right);
 	}
 }
 
 
 void AVL_Tree::printHeightAndBalanceFactor() {
-	for (int i = 0; i < this->tree_vect.size(); ++i) {
-		std::cout << "Node " << tree_vect[i]->key << ", Height: " << tree_vect[i]->height << ", BF: " << tree_vect[i]->balance_factor << std::endl;
-	}
+	std::queue<AVL_Node*> q;
+    int level = 0;
+    q.push(this->root);
+
+    while(!q.empty()){
+        int size = q.size();
+        std::cout << "Level: " << level << std::endl;
+        for(int i = 0; i < size; ++i){
+            AVL_Node* curr = q.front();
+            q.pop();
+            std::cout << "Node " << curr->key << ", Height: " << curr->height << ", BF: " << curr->balance_factor << std::endl;
+
+            if(curr->left != nullptr)
+                q.push(curr->left);
+            if(curr->right != nullptr)
+                q.push(curr->right);
+        }
+        level++;
+    }
+
+    std::cout << "Levels: " << level << std::endl;
+
 }
+
+AVL_Node* AVL_Tree::changeBalanceAndHeight(AVL_Node* root) {
+    root->height = std::max(treeHeightHelper(root->left), treeHeightHelper(root->right));
+    root->balance_factor = treeHeightHelper(root->left) - treeHeightHelper(root->right);
+
+    root->left->height = std::max(treeHeightHelper(root->left->left), treeHeightHelper(root->left->right));
+    root->left->balance_factor = treeHeightHelper(root->left->left) - treeHeightHelper(root->left->right);
+
+    root->right->height = std::max(treeHeightHelper(root->right->left), treeHeightHelper(root->right->right));
+    root->right->balance_factor = treeHeightHelper(root->right->left) - treeHeightHelper(root->right->right);
+
+    return root;
+}
+
+

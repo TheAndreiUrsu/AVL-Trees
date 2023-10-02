@@ -13,32 +13,35 @@ int main(){
 
 	AVL_Tree test;
 
-	for (int i = 0; i < 50; ++i) {
-		test.insertNode(i);
-	}
+   for(int i = 0; i < 99; ++i){
+       test.insertNode(i);
+   }
 
 	cout << "----Debugging----" << endl;
 
 	test.getTree();
 	test.printHeightAndBalanceFactor();
+    //using bfs to print out the nodes by level;
+
+
 	cout << endl;
 
 	std::vector<int> in_order = test.inOrder();
 	std::cout << "In Order Traversal: ";
-	for (unsigned int i = 0; i < in_order.size(); ++i) {
-		cout << in_order.at(i) << " ";
+	for (int i : in_order) {
+		cout << i << " ";
 	}
 	std::cout << std::endl;
 	vector<int> pre_order = test.preOrder();
 	std::cout << "Pre Order Traversal: ";
-	for (unsigned int i = 0; i < pre_order.size(); ++i) {
-		cout << pre_order.at(i) << " ";
+	for (int i : pre_order) {
+		cout << i << " ";
 	}	
 	std::cout << std::endl;
 	vector<int> post_order = test.postOrder();
 	std::cout << "Post Order Traversal: ";
-	for (unsigned int i = 0; i < post_order.size(); ++i) {
-		cout << post_order.at(i) << " ";
+	for (int i : post_order) {
+		cout << i << " ";
 	}
 	std::cout << std::endl;
 

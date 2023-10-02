@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <queue>
 
 class AVL_Node {
 public:
@@ -10,8 +11,6 @@ private:
 	int key;
 	int balance_factor; // Height of left subtree - height of right subtree
 	int height;
-
-	bool is_leaf;
 
 	AVL_Node* left;
 	AVL_Node* right;
@@ -59,8 +58,13 @@ public:
 	/*===== Rotations =====*/
 	AVL_Node* rightRotate(AVL_Node* root);
 	AVL_Node* leftRotate(AVL_Node* root);
+    AVL_Node* rightLeftRotate(AVL_Node* root);
+    AVL_Node* leftRightRotate(AVL_Node* root);
+
+    AVL_Node* changeBalanceAndHeight(AVL_Node* root);
 
 	/*===== Debugging =====*/
 	void printHeightAndBalanceFactor();
 	std::vector<AVL_Node*> getTree();
+    AVL_Node* getRoot(){return this->root;};
 };
