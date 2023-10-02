@@ -6,6 +6,7 @@
 			[
 				{
 					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.8"
@@ -38,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "CMakeTarget::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-CMakeTarget-Debug-3f000277565bdcc33a5b.json",
+					"jsonFile" : "target-CMakeTarget-Debug-d2ccd611fb2d232724af.json",
 					"name" : "CMakeTarget",
 					"projectIndex" : 0
 				}
@@ -54,6 +55,6 @@
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 2
+		"minor" : 5
 	}
 }
