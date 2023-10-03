@@ -1,4 +1,4 @@
-#include "avl_tree_node.h"
+#include "avl_tree.h"
 
 AVL_Node::AVL_Node(int key) {
 	this->key = key;
