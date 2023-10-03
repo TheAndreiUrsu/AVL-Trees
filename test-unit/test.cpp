@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch_test_macros.hpp>
-#include "../src/avl_tree.h"
+#include "../AVL_Tree/avl_tree.h"
 #include <stdlib.h>
 #include <algorithm>
 

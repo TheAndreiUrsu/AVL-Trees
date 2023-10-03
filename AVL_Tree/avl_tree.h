@@ -42,7 +42,7 @@ public:
 	int treeHeight();
 
 	/*===== Rotations =====*/
-	AVL_Node* rightRotate(AVL_Node* root);
+	AVL_Node* rightRotate(AVL_Node* Gator_Node);
 	AVL_Node* leftRotate(AVL_Node* root);
 
     AVL_Node* changeBalanceAndHeight(AVL_Node* root);

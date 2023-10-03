@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include "avl_tree.h"
+#include "gator_tree.h"
 using namespace std;
 
 /* Note: 
@@ -11,14 +11,24 @@ using namespace std;
 
 int main(){
 
-	AVL_Tree test;
+    int commands = 0;
 
-   test.insertNode(1);
-   test.insertNode(0);
-   test.insertNode(5);
-   test.insertNode(6);
-   test.insertNode(3);
-   test.insertNode(4);
+
+    while(commands > 0){
+
+        commands--;
+    }
+
+
+    /*
+	Gator_Tree test;
+
+   test.insertNode("j",1);
+   test.insertNode("j",0);
+   test.insertNode("j",5);
+   test.insertNode("j",6);
+   test.insertNode("j",3);
+   test.insertNode("j",4);
 
 	cout << "----Debugging----" << endl;
 
@@ -46,7 +56,7 @@ int main(){
 	for (int i : post_order) {
 		cout << i << " ";
 	}
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 
 	return 0;
 }

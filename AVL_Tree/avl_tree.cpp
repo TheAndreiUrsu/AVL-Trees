@@ -71,14 +71,14 @@ void AVL_Tree::insertNode(int key) {
 	this->root = insertNodeHelper(this->root, key);
 }
 
-AVL_Node* AVL_Tree::rightRotate(AVL_Node* root) {
+AVL_Node* AVL_Tree::rightRotate(AVL_Node* Gator_Node) {
 	std::cout << "Rotating right!" << std::endl;
 
-    AVL_Node* child = root->left;
-    root->left = child->right;
-    child->right = root;
+    AVL_Node* child = Gator_Node->left;
+    Gator_Node->left = child->right;
+    child->right = Gator_Node;
 
-    // Return the new root of the rotated subtree.
+    // Return the new Gator_Node of the rotated subtree.
     return changeBalanceAndHeight(child);
 }
 
