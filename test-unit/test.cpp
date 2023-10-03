@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch_test_macros.hpp>
-#include "../src/avl_tree_node.h"
+#include "../src/avl_tree.h"
 #include <stdlib.h>
 #include <algorithm>
 
@@ -29,7 +29,7 @@ TEST_CASE("BST Insert Large", "[flag]"){
     AVL_Tree inputTree;
     std::vector<int> expectedOutput, actualOutput;
 
-    for(int i = 0; i < 50; i++)
+    for(int i = 0; i < 10000; i++)
     {
         int randomInput = rand();
         if (std::count(expectedOutput.begin(), expectedOutput.end(), randomInput) == 0)
@@ -40,14 +40,6 @@ TEST_CASE("BST Insert Large", "[flag]"){
     }
 
     actualOutput = inputTree.inOrder();
-    for(int i : actualOutput){
-        std::cout << i << " ";
-    }
-    std::cout << std::endl;
-    std::sort(expectedOutput.begin(), expectedOutput.end());
-    for(int i : expectedOutput){
-        std::cout << i << " ";
-    }
     REQUIRE(expectedOutput.size() == actualOutput.size());
     //REQUIRE_FALSE(expectedOutput == actualOutput);    //This assertion can be wrong. Don't use
     std::sort(expectedOutput.begin(), expectedOutput.end());

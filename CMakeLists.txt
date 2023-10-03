@@ -25,15 +25,17 @@ include_directories(test-unit)
 add_executable(Main
         src/main.cpp
         src/avl_tree.cpp
-        src/avl_tree_node.h
+        src/avl_tree.h
         src/avl_node.cpp
+        src/avl_node.h
 )
 
 add_executable(Tests
         test-unit/test.cpp
         src/avl_tree.cpp
-        src/avl_tree_node.h
-        src/avl_node.cpp)
+        src/avl_tree.h
+        src/avl_node.cpp
+        src/avl_node.h)
 
 target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain) #link catch to test.cpp file
 #if your testing executable is named Project1, change Tests in the line above to Project1

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include "avl_tree_node.h"
+#include "avl_tree.h"
 using namespace std;
 
 /* Note: 
@@ -13,9 +13,12 @@ int main(){
 
 	AVL_Tree test;
 
-   for(int i = 0; i < 99; ++i){
-       test.insertNode(i);
-   }
+   test.insertNode(1);
+   test.insertNode(0);
+   test.insertNode(5);
+   test.insertNode(6);
+   test.insertNode(3);
+   test.insertNode(4);
 
 	cout << "----Debugging----" << endl;
 
