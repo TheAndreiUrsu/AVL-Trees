@@ -2,12 +2,13 @@
 
 Gator_Tree::Gator_Tree() {
 	this->root = nullptr;
-	std::cout << "Tree created!" << std::endl; 
+    this->levels = 0;
+	//std::cout << "Tree created!" << std::endl;
 }
-Gator_Tree::~Gator_Tree() { std::cout << "Tree destroyed!" << std::endl; }
+Gator_Tree::~Gator_Tree() { /*std::cout << "Tree destroyed!" << std::endl;*/ }
 
 /*===== Insertion =====*/
-Gator_Node* Gator_Tree::insertNodeHelper(Gator_Node* root_, std::string name, int ID) {
+Gator_Node* Gator_Tree::insertNodeHelper(Gator_Node* root_, const std::string& name, int ID) {
     Gator_Node* new_node = new Gator_Node(name, ID);
 
 	// Empty tree, add root.
@@ -22,9 +23,9 @@ Gator_Node* Gator_Tree::insertNodeHelper(Gator_Node* root_, std::string name, in
         root_->right_node = insertNodeHelper(root_->right_node, name, ID);
 
 	// Update height of node
-    root_->height = std::max(right_node(root_->left_node), right_node(root_->right_node));
+    root_->height = std::max(heightHelper(root_->left_node), heightHelper(root_->right_node));
 
-    root_->balance_factor = right_node(root_->left_node) - right_node(root_->right_node);
+    root_->balance_factor = heightHelper(root_->left_node) - heightHelper(root_->right_node);
 
 	// Right heavy
 	if(root_->balance_factor < -1){
@@ -98,12 +99,12 @@ void Gator_Tree::inOrderHelper(Gator_Node* root_) {
 
 	if (root_ != nullptr) {
 		inOrderHelper(root_->left_node);
-		this->in_order.push_back(root_->ID);
+		this->in_order.push_back(root_->name);
 		inOrderHelper(root_->right_node);
 	}
 
 }
-std::vector<int> Gator_Tree::inOrder() {
+std::vector<std::string> Gator_Tree::inOrder() {
 	if (this->in_order.size() > 0) {
 		return this->in_order;
 	}
@@ -117,10 +118,10 @@ void Gator_Tree::postOrderHelper(Gator_Node* root_)
 	if (root_ != nullptr) {
 		postOrderHelper(root_->left_node);
 		postOrderHelper(root_->right_node);
-		this->post_order.push_back(root_->ID);
+		this->post_order.push_back(root_->name);
 	}
 }
-std::vector<int> Gator_Tree::postOrder()
+std::vector<std::string> Gator_Tree::postOrder()
 {
 	if (this->post_order.size() > 0) {
 		return this->post_order;
@@ -133,12 +134,12 @@ std::vector<int> Gator_Tree::postOrder()
 void Gator_Tree::preOrderHelper(Gator_Node* root_)
 {
 	if (root_ != nullptr) {
-		this->pre_order.push_back(root_->ID);
+		this->pre_order.push_back(root_->name);
 		preOrderHelper(root_->left_node);
 		preOrderHelper(root_->right_node);
 	}
 }
-std::vector<int> Gator_Tree::preOrder()
+std::vector<std::string> Gator_Tree::preOrder()
 {
 	if (!this->pre_order.empty()) {
 		return this->pre_order;
@@ -150,18 +151,18 @@ std::vector<int> Gator_Tree::preOrder()
 
 
 
-int Gator_Tree::right_node(Gator_Node* avl_root) {
+int Gator_Tree::heightHelper(Gator_Node* root_) {
 	
-	if (avl_root == nullptr)
+	if (root_ == nullptr)
 		return 0;
 	else {
-		return 1 + std::max((avl_root->left_node ? right_node(avl_root->left_node) : 0), (avl_root->right_node ? right_node(avl_root->right_node) : 0));
+		return 1 + std::max((root_->left_node ? heightHelper(root_->left_node) : 0), (root_->right_node ? heightHelper(root_->right_node) : 0));
 	}
 	
 }
 int Gator_Tree::treeHeight()
 {
-	return right_node(this->root);
+	return heightHelper(this->root);
 }
 
 
@@ -182,6 +183,30 @@ void Gator_Tree::treeHelper(Gator_Node* avl_root) {
 	}
 }
 
+int Gator_Tree::getLevelCount() {
+    if(this->root == nullptr)
+        return 0;
+
+    std::queue<Gator_Node*> q;
+    int level = 0;
+    q.push(this->root);
+
+    while(!q.empty()){
+        int size = q.size();
+        for(int i = 0; i < size; ++i){
+            Gator_Node* curr = q.front();
+            q.pop();
+
+            if(curr->left_node != nullptr)
+                q.push(curr->left_node);
+            if(curr->right_node != nullptr)
+                q.push(curr->right_node);
+        }
+        level++;
+    }
+
+    return level;
+}
 
 void Gator_Tree::printHeightAndBalanceFactor() {
 	std::queue<Gator_Node*> q;
@@ -210,19 +235,65 @@ void Gator_Tree::printHeightAndBalanceFactor() {
 
 Gator_Node* Gator_Tree::changeBalanceAndHeight(Gator_Node* root_) {
     if(root_ != nullptr){
-        root_->height = std::max(right_node(root_->left_node), right_node(root_->right_node));
-        root_->balance_factor = right_node(root_->left_node) - right_node(root_->right_node);
+        root_->height = std::max(heightHelper(root_->left_node), heightHelper(root_->right_node));
+        root_->balance_factor = heightHelper(root_->left_node) - heightHelper(root_->right_node);
     }
     if(root_->left_node != nullptr){
-        root_->left_node->height = std::max(right_node(root_->left_node->left_node), right_node(root_->left_node->right_node));
-        root_->left_node->balance_factor = right_node(root_->left_node->left_node) - right_node(root_->left_node->right_node);
+        root_->left_node->height = std::max(heightHelper(root_->left_node->left_node), heightHelper(root_->left_node->right_node));
+        root_->left_node->balance_factor = heightHelper(root_->left_node->left_node) - heightHelper(root_->left_node->right_node);
     }
     if(root_->right_node != nullptr){
-        root_->right_node->height = std::max(right_node(root_->right_node->left_node), right_node(root_->right_node->right_node));
-        root_->right_node->balance_factor = right_node(root_->right_node->left_node) - right_node(root_->right_node->right_node);
+        root_->right_node->height = std::max(heightHelper(root_->right_node->left_node), heightHelper(root_->right_node->right_node));
+        root_->right_node->balance_factor = heightHelper(root_->right_node->left_node) - heightHelper(root_->right_node->right_node);
     }
 
     return root_;
+}
+
+void Gator_Tree::deleteNode(int ID) {
+
+}
+
+std::string Gator_Tree::searchNodeByKey(int ID) {
+    if(ID == this->root->ID)
+        return this->root->name + "\n";
+
+    std::vector<Gator_Node*> nodes = this->getTree();
+
+    for(auto & node : nodes){
+        if(node->ID == ID){
+            return node->name + "\n";
+        }
+    }
+
+    return "unsuccessful\n";
+}
+
+std::string Gator_Tree::searchNodeByValue(const std::string& name){
+    if(name == this->root->name)
+        return std::to_string(this->root->ID) + "\n";
+
+    std::vector<Gator_Node*> nodes = this->getTree();
+    std::vector<int> ID;
+    std::string s;
+
+    for(auto & node : nodes){
+        if(node->name == name){
+            ID.push_back(node->ID);
+        }
+    }
+    if(!ID.empty()){
+        if(ID.size() < 2){
+            return std::to_string(ID[0]) + "\n";
+        }
+
+        for(auto& num : ID){
+            s += std::to_string(num) + " ";
+        }
+        return s + "\n";
+    }
+
+    return "unsuccessful\n";
 }
 
 

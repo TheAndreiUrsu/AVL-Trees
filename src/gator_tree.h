@@ -8,13 +8,15 @@ class Gator_Tree {
 private:
     Gator_Node* root;
 
-    Gator_Node* insertNodeHelper(Gator_Node* root, std::string name, int ID);
+    Gator_Node* insertNodeHelper(Gator_Node* root, const std::string& name, int ID);
 
-	std::vector<int> in_order;
-	std::vector<int> post_order;
-	std::vector<int> pre_order;
+	std::vector<std::string> in_order;
+	std::vector<std::string> post_order;
+	std::vector<std::string> pre_order;
 
 	std::vector<Gator_Node*> gator_vect;
+
+    int levels;
 
 	void inOrderHelper(Gator_Node* root_);
 	void postOrderHelper(Gator_Node* root_);
@@ -22,7 +24,7 @@ private:
 
 	void treeHelper(Gator_Node* root_);
 
-	int right_node(Gator_Node* root_);
+	int heightHelper(Gator_Node* root_);
 
 public:
 	/*===== Constructor/Destructor =====*/
@@ -32,13 +34,22 @@ public:
 	/*===== Insertions =====*/
 	void insertNode(std::string name, int ID);
 
+    /*===== Deletions =====*/
+    void deleteNode(int ID);
+
+    /*===== Searching =====*/
+    std::string searchNodeByKey(int ID);
+    std::string searchNodeByValue(const std::string& name);
+
 	/*===== DFS Traversals =====*/
-	std::vector<int> inOrder();
-	std::vector<int> postOrder();
-	std::vector<int> preOrder();
+	std::vector<std::string> inOrder();
+	std::vector<std::string> postOrder();
+	std::vector<std::string> preOrder();
 
 	/*===== Tree Height =====*/
 	int treeHeight();
+
+    int getLevelCount();
 
 	/*===== Rotations =====*/
     Gator_Node* rightRotate(Gator_Node* root_);

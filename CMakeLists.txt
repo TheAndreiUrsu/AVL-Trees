@@ -31,6 +31,7 @@ add_executable(Main
         src/gator_node.h
         src/gator_tree.cpp
         src/gator_node.cpp
+        src/gator_id_app.h
 )
 
 add_executable(Tests
@@ -41,7 +42,8 @@ add_executable(Tests
         AVL_Tree/avl_node.h
         src/gator_node.h
         src/gator_tree.cpp
-        src/gator_node.cpp)
+        src/gator_node.cpp
+        src/gator_id_app.h)
 
 target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain) #link catch to test.cpp file
 #if your testing executable is named Project1, change Tests in the line above to Project1

@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch_test_macros.hpp>
-#include "../AVL_Tree/avl_tree.h"
-#include <stdlib.h>
+#include "../src/gator_tree.h"
+#include <cstdlib>
 #include <algorithm>
 
 /*
@@ -12,10 +12,10 @@
 
 TEST_CASE("BST Insert", "[flag]"){
 	
-		AVL_Tree tree;   // Create a Tree object
-		tree.insertNode(1);
-		tree.insertNode(2);
-		tree.insertNode(3);
+		Gator_Tree tree;   // Create a Tree object
+		tree.insertNode("j",1);
+		tree.insertNode("j",2);
+		tree.insertNode("j",3);
         tree.getTree();
 		std::vector<int> actualOutput = tree.inOrder();
 		std::vector<int> expectedOutput = {1, 2, 3};
@@ -26,16 +26,16 @@ TEST_CASE("BST Insert", "[flag]"){
 }
 
 TEST_CASE("BST Insert Large", "[flag]"){
-    AVL_Tree inputTree;
+    Gator_Tree inputTree;
     std::vector<int> expectedOutput, actualOutput;
 
-    for(int i = 0; i < 10000; i++)
+    for(int i = 0; i < 100000; i++)
     {
         int randomInput = rand();
         if (std::count(expectedOutput.begin(), expectedOutput.end(), randomInput) == 0)
         {
             expectedOutput.push_back(randomInput);
-            inputTree.insertNode(randomInput);
+            inputTree.insertNode("j",randomInput);
         }
     }
 
