@@ -5,7 +5,7 @@ public:
     friend class Gator_Tree;
 private:
     std::string name;
-    int ID;
+    std::string ID;
     int balance_factor; // Height of left subtree - height of right subtree
     int height;
 
@@ -13,5 +13,5 @@ private:
     Gator_Node* right_node;
 
     //Gator_Node() {};
-    Gator_Node(std::string name, int ID);
+    Gator_Node(std::string name, std::string ID);
 };

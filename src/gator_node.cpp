@@ -1,6 +1,6 @@
 #include "gator_tree.h"
 
-Gator_Node::Gator_Node(std::string name,int ID) {
+Gator_Node::Gator_Node(std::string name, std::string ID) {
 	this->name = name;
     this->ID = ID;
     this->left_node = nullptr;

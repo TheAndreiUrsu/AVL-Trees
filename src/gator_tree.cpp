@@ -3,18 +3,20 @@
 Gator_Tree::Gator_Tree() {
 	this->root = nullptr;
     this->levels = 0;
-	//std::cout << "Tree created!" << std::endl;
 }
-Gator_Tree::~Gator_Tree() { /*std::cout << "Tree destroyed!" << std::endl;*/ }
 
 /*===== Insertion =====*/
-Gator_Node* Gator_Tree::insertNodeHelper(Gator_Node* root_, const std::string& name, int ID) {
+Gator_Node* Gator_Tree::insertNodeHelper(Gator_Node* root_, std::string name, std::string ID) {
     Gator_Node* new_node = new Gator_Node(name, ID);
 
 	// Empty tree, add root.
 	if (root_ == nullptr) {
 		return new_node;
 	}
+
+    if(new_node->ID == root_->ID){
+        return nullptr;
+    }
 		
 	// Check if it is less than, to go to left subtree, else go to right subtree.
 	if (new_node->ID < root_->ID)
@@ -27,33 +29,7 @@ Gator_Node* Gator_Tree::insertNodeHelper(Gator_Node* root_, const std::string& n
 
     root_->balance_factor = heightHelper(root_->left_node) - heightHelper(root_->right_node);
 
-	// Right heavy
-	if(root_->balance_factor < -1){
-        std::cout << "Tree is right heavy!" << std::endl;
-        if(ID < root_->right_node->ID){
-            std::cout << "Subtree is left heavy!" << std::endl;
-            root_->right_node = rightRotate(root_->right_node);
-            return leftRotate(root_);
-        }
-        else{
-            std::cout << "Subtree is right heavy!" << std::endl;
-            return leftRotate(root_);
-        }
-    }
-    else if(root_->balance_factor > 1){
-        std::cout << "Tree is left heavy!" << std::endl;
-        if(ID > root_->left_node->ID){
-            std::cout << "Subtree is right heavy!" << std::endl;
-            root_->left_node = leftRotate(root_->left_node);
-            return rightRotate(root_);
-        }
-        else{
-            std::cout << "Subtree is left heavy!" << std::endl;
-            return rightRotate(root_);
-        }
-    }
-
-	/*
+    /*
 		IF tree is right heavy
 			IF tree's right subtree is left heavy
 				Perform Right Left Rotation
@@ -66,14 +42,40 @@ Gator_Node* Gator_Tree::insertNodeHelper(Gator_Node* root_, const std::string& n
 				Perform Right rotation
 	*/
 
+	// Right heavy
+	if(root_->balance_factor < -1){
+        if(ID < root_->right_node->ID){
+            root_->right_node = rightRotate(root_->right_node);
+            return leftRotate(root_);
+        }
+        else{
+            return leftRotate(root_);
+        }
+    }
+    else if(root_->balance_factor > 1){
+        if(ID > root_->left_node->ID){
+            root_->left_node = leftRotate(root_->left_node);
+            return rightRotate(root_);
+        }
+        else{
+            return rightRotate(root_);
+        }
+    }
+
 	return root_;
 }
-void Gator_Tree::insertNode(std::string name, int ID) {
-	this->root = insertNodeHelper(this->root, name, ID);
+std::string Gator_Tree::insertNode(std::string name, std::string ID) {
+    name = this->verifyName(name);
+    ID = this->verifyID(ID);
+
+    if(!name.empty() && !ID.empty()){
+        this->root = insertNodeHelper(this->root, name, ID);
+        return this->root ? "successful\n" : "unsuccessful\n";
+    }
+    return "unsuccessful\n";
 }
 
 Gator_Node* Gator_Tree::rightRotate(Gator_Node* root_) {
-	std::cout << "Rotating right!" << std::endl;
 
     Gator_Node* child = root_->left_node;
     root_->left_node = child->right_node;
@@ -84,8 +86,6 @@ Gator_Node* Gator_Tree::rightRotate(Gator_Node* root_) {
 }
 
 Gator_Node* Gator_Tree::leftRotate(Gator_Node* root_) {
-	std::cout << "Rotating Left!" << std::endl;
-
     Gator_Node* child = root_->right_node;
     root_->right_node = child->left_node;
     child->left_node = root_;
@@ -96,20 +96,15 @@ Gator_Node* Gator_Tree::leftRotate(Gator_Node* root_) {
 
 /*===== DFS Traversals =====*/
 void Gator_Tree::inOrderHelper(Gator_Node* root_) {
-
-	if (root_ != nullptr) {
-		inOrderHelper(root_->left_node);
-		this->in_order.push_back(root_->name);
-		inOrderHelper(root_->right_node);
-	}
-
+    if (root_ != nullptr) {
+        inOrderHelper(root_->left_node);
+        this->in_order.push_back(root_->name);
+        inOrderHelper(root_->right_node);
+    }
 }
 std::vector<std::string> Gator_Tree::inOrder() {
-	if (this->in_order.size() > 0) {
-		return this->in_order;
-	}
-
-	this->inOrderHelper(this->root);
+	this->in_order.clear();
+    this->inOrderHelper(this->root);
 	return this->in_order;
 }
 
@@ -123,10 +118,7 @@ void Gator_Tree::postOrderHelper(Gator_Node* root_)
 }
 std::vector<std::string> Gator_Tree::postOrder()
 {
-	if (this->post_order.size() > 0) {
-		return this->post_order;
-	}
-
+    this->post_order.clear();
 	this->postOrderHelper(this->root);
 	return this->post_order;
 }
@@ -141,15 +133,10 @@ void Gator_Tree::preOrderHelper(Gator_Node* root_)
 }
 std::vector<std::string> Gator_Tree::preOrder()
 {
-	if (!this->pre_order.empty()) {
-		return this->pre_order;
-	}
-	
+    this->pre_order.clear();
 	this->preOrderHelper(this->root);
 	return this->pre_order;
 }
-
-
 
 int Gator_Tree::heightHelper(Gator_Node* root_) {
 	
@@ -168,13 +155,11 @@ int Gator_Tree::treeHeight()
 
 /*===== Debugging =====*/
 std::vector<Gator_Node*> Gator_Tree::getTree() {
-	if (!this->gator_vect.empty()) {
-		return this->gator_vect;
-	}
-
+    this->gator_vect.clear();
 	this->treeHelper(this->root);
 	return this->gator_vect;
 }
+// in order representation of tree
 void Gator_Tree::treeHelper(Gator_Node* avl_root) {
 	if (avl_root != nullptr) {
 		treeHelper(avl_root->left_node);
@@ -208,31 +193,6 @@ int Gator_Tree::getLevelCount() {
     return level;
 }
 
-void Gator_Tree::printHeightAndBalanceFactor() {
-	std::queue<Gator_Node*> q;
-    int level = 0;
-    q.push(this->root);
-
-    while(!q.empty()){
-        int size = q.size();
-        std::cout << "Level: " << level << std::endl;
-        for(int i = 0; i < size; ++i){
-            Gator_Node* curr = q.front();
-            q.pop();
-            std::cout << "Node " << curr->ID << ", Height: " << curr->height << ", BF: " << curr->balance_factor << std::endl;
-
-            if(curr->left_node != nullptr)
-                q.push(curr->left_node);
-            if(curr->right_node != nullptr)
-                q.push(curr->right_node);
-        }
-        level++;
-    }
-
-    std::cout << "Levels: " << level << std::endl;
-
-}
-
 Gator_Node* Gator_Tree::changeBalanceAndHeight(Gator_Node* root_) {
     if(root_ != nullptr){
         root_->height = std::max(heightHelper(root_->left_node), heightHelper(root_->right_node));
@@ -249,32 +209,71 @@ Gator_Node* Gator_Tree::changeBalanceAndHeight(Gator_Node* root_) {
 
     return root_;
 }
+std::string Gator_Tree::deleteNode(std::string ID) {
+    if(this->root)
+        std::cout << "Root Node: " << this->root->name << std::endl;
+    this->deleteNodeHelper(this->root, ID);
+    return this->searchNodeByKey(ID)=="unsuccessful\n" ? "unsuccessful\n" : "successful\n";
+}
+Gator_Node* Gator_Tree::deleteNodeHelper(Gator_Node *root_, std::string ID) {
+    // First seeing if it exists.
+    if(this->searchNodeByKey(ID) == "unsuccessful\n" || root_ == nullptr){
+        return root_;
+    }
 
-void Gator_Tree::deleteNode(int ID) {
+    if(ID == root_->ID){
+        if(root_->left_node == nullptr && root_->right_node == nullptr){
+            root_ = nullptr;
+        }
+        else if(root_->left_node == nullptr){
+            Gator_Node* child = root_->right_node;
+            root_ = child;
+            child = nullptr;
+        }
+        else if(root_->right_node == nullptr){
+            Gator_Node* child = root_->left_node;
+            root_ = child;
+            child = nullptr;
+        }
+        else{
+            // Inorder successor found by traversing the left subtree in the right subtree for removing a node with 2 nodes.
+            Gator_Node* child = root_->right_node;
+            while(child->left_node != nullptr){
+                child = child->left_node;
+            }
 
+            root_->name = child->name;
+            root_->ID = child->ID;
+
+            root_->right_node = deleteNodeHelper(root_->right_node, child->ID);
+        }
+    }
+
+    root_ = changeBalanceAndHeight(root_);
+
+    return root_;
 }
 
-std::string Gator_Tree::searchNodeByKey(int ID) {
-    if(ID == this->root->ID)
-        return this->root->name + "\n";
+std::string Gator_Tree::searchNodeByKey(std::string ID) {
+    ID = this->verifyID(ID);
+    if(!ID.empty()){
+        std::vector<Gator_Node*> nodes = this->getTree();
 
-    std::vector<Gator_Node*> nodes = this->getTree();
-
-    for(auto & node : nodes){
-        if(node->ID == ID){
-            return node->name + "\n";
+        for(auto & node : nodes){
+            if(node->ID == ID){
+                return node->name + "\n";
+            }
         }
+        return "unsuccessful\n";
     }
 
     return "unsuccessful\n";
 }
 
-std::string Gator_Tree::searchNodeByValue(const std::string& name){
-    if(name == this->root->name)
-        return std::to_string(this->root->ID) + "\n";
+std::string Gator_Tree::searchNodeByValue(std::string name){
 
     std::vector<Gator_Node*> nodes = this->getTree();
-    std::vector<int> ID;
+    std::vector<std::string> ID;
     std::string s;
 
     for(auto & node : nodes){
@@ -284,16 +283,56 @@ std::string Gator_Tree::searchNodeByValue(const std::string& name){
     }
     if(!ID.empty()){
         if(ID.size() < 2){
-            return std::to_string(ID[0]) + "\n";
+            return ID[0] + "\n";
         }
 
         for(auto& num : ID){
-            s += std::to_string(num) + " ";
+            s += num + " ";
         }
         return s + "\n";
     }
 
     return "unsuccessful\n";
+}
+
+std::string Gator_Tree::deleteNodeInorder(int N) {
+    std::string ID = "00000000";
+    int size = (int)this->getTree().size();
+    if(N > size - 1)
+        return "unsuccessful\n";
+    else{
+        ID = this->getTree().at(N)->ID;
+        this->deleteNode(ID);
+        return "successful\n";
+    }
+}
+
+/*===== Data Validation =====*/
+std::string Gator_Tree::verifyID(std::string& number){
+
+    // Checking if the id is > 8 or less than 8.
+    // ID must be 8 digits long.
+    if(number.length() > 8 || number.length() < 8){
+        return "";
+    }
+
+    // Checking if the ID contains only digits.
+    for(char c : number){
+        if(!isdigit(c)){
+            return "";
+        }
+    }
+    return number;
+}
+
+std::string Gator_Tree::verifyName(std::string& word){
+    // Checking if the name contains only alphabetical characters and spaces, if applicable.
+    for(char c : word){
+        if(!isalpha(c) && !isspace(c)){
+            return "";
+        }
+    }
+    return word;
 }
 
 

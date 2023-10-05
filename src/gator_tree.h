@@ -6,40 +6,48 @@
 
 class Gator_Tree {
 private:
+    // Primary data members
     Gator_Node* root;
+    std::vector<Gator_Node*> gator_vect;
 
-    Gator_Node* insertNodeHelper(Gator_Node* root, const std::string& name, int ID);
+    // Vectors for tree traversal
+    std::vector<std::string> in_order;
+    std::vector<int> in_order_ID;
+    std::vector<std::string> post_order;
+    std::vector<std::string> pre_order;
 
-	std::vector<std::string> in_order;
-	std::vector<std::string> post_order;
-	std::vector<std::string> pre_order;
+    int levels; // Number of levels in the tree
 
-	std::vector<Gator_Node*> gator_vect;
+    // Helper functions for tree traversal and height calculation
+    void inOrderHelper(Gator_Node* root_);
+    void postOrderHelper(Gator_Node* root_);
+    void preOrderHelper(Gator_Node* root_);
+    void treeHelper(Gator_Node* root_);
+    int heightHelper(Gator_Node* root_);
 
-    int levels;
+    // Helper functions for inserting and deleting nodes
+    Gator_Node* insertNodeHelper(Gator_Node* root_, std::string name, std::string ID);
+    Gator_Node* deleteNodeHelper(Gator_Node* root_, std::string ID);
 
-	void inOrderHelper(Gator_Node* root_);
-	void postOrderHelper(Gator_Node* root_);
-	void preOrderHelper(Gator_Node* root_);
-
-	void treeHelper(Gator_Node* root_);
-
-	int heightHelper(Gator_Node* root_);
+    // Utility functions for data verification
+    std::string verifyID(std::string& number);
+    std::string verifyName(std::string& word);
 
 public:
 	/*===== Constructor/Destructor =====*/
     Gator_Tree();
-	~Gator_Tree();
+	~Gator_Tree()= default;
 
 	/*===== Insertions =====*/
-	void insertNode(std::string name, int ID);
+	std::string insertNode(std::string name, std::string ID);
 
     /*===== Deletions =====*/
-    void deleteNode(int ID);
+    std::string deleteNode(std::string ID);
+    std::string deleteNodeInorder(int N);
 
     /*===== Searching =====*/
-    std::string searchNodeByKey(int ID);
-    std::string searchNodeByValue(const std::string& name);
+    std::string searchNodeByKey(std::string ID);
+    std::string searchNodeByValue(std::string name);
 
 	/*===== DFS Traversals =====*/
 	std::vector<std::string> inOrder();
@@ -58,7 +66,5 @@ public:
     Gator_Node* changeBalanceAndHeight(Gator_Node* root_);
 
 	/*===== Debugging =====*/
-	void printHeightAndBalanceFactor();
 	std::vector<Gator_Node*> getTree();
-    Gator_Node* getRoot(){return this->root;};
 };
