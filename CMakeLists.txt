@@ -24,26 +24,23 @@ include_directories(test-unit)
 
 add_executable(Main
         src/main.cpp
-        AVL_Tree/avl_tree.cpp
-        AVL_Tree/avl_tree.h
-        AVL_Tree/avl_node.cpp
-        AVL_Tree/avl_node.h
         src/gator_node.h
         src/gator_tree.cpp
         src/gator_node.cpp
-        src/gator_id_app.h
 )
 
 add_executable(Tests
         test-unit/test.cpp
-        AVL_Tree/avl_tree.cpp
-        AVL_Tree/avl_tree.h
-        AVL_Tree/avl_node.cpp
-        AVL_Tree/avl_node.h
         src/gator_node.h
         src/gator_tree.cpp
         src/gator_node.cpp
-        src/gator_id_app.h)
+)
+
+add_custom_target(run_test_with_input
+        COMMAND Tests < ${CMAKE_CURRENT_SOURCE_DIR}/test-io/input-files/2.txt
+        DEPENDS Tests
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
 
 target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain) #link catch to test.cpp file
 #if your testing executable is named Project1, change Tests in the line above to Project1
