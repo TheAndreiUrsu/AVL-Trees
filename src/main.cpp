@@ -1,7 +1,7 @@
 #include <iostream>
-#include <sstream>
 #include <vector>
-#include "gator_id_app.h"
+#include <fstream>
+#include "gator_tree.h"
 using namespace std;
 
 /* Note: 
@@ -9,8 +9,8 @@ using namespace std;
 	2. You will submit this main.cpp file and any header files you have on Gradescope. 
 */
 
-string verifyID(istringstream& in);
-string verifyName(istringstream& in);
+string verifyID(string& number);
+string verifyName(string& word);
 
 void insert(Gator_Tree& gatorTree, const string& name, int ID);
 void remove(Gator_Tree& gatorTree, int ID);
@@ -21,117 +21,150 @@ void printInorder(Gator_Tree& gatorTree);
 void printPreorder(Gator_Tree& gatorTree);
 void printPostorder(Gator_Tree& gatorTree);
 void printLevelCount(Gator_Tree& gatorTree);
-void removeInorder(int N);
+void removeInorder(Gator_Tree& gatorTree, int N);
 
-int main(){
-    GatorApp App;
-    App.run();
+int main(int argc, char* argv[]){
 
-    /*int commands;
-    cin >> commands;
+    ifstream input_txt(argv[2]);
 
-    while(commands > 0){
-        string command;
-        cin >> command;
-
-        if(command.compare("insert") == 0){
-
-        }
-
-        commands--;
-    }
+    if(!input_txt.is_open())
+        return 1;
 
     Gator_Tree gatorTree;
 
-    insert(gatorTree, "John", 12345678);
-    insert(gatorTree, "Alice", 23456789);
-    insert(gatorTree, "Bob", 34567890);
-    insert(gatorTree, "Charlie", 45678901);
-    insert(gatorTree, "David", 56789012);
-    insert(gatorTree, "Eve", 67890123);
-    insert(gatorTree, "Frank", 78901234);
-    insert(gatorTree, "Grace", 89012345);
-    insert(gatorTree, "Hannah", 90123456);
-    insert(gatorTree, "Isabel", 91234567);
-    insert(gatorTree, "Jack", 82345678);
-    insert(gatorTree, "Karen", 93456789);
-    insert(gatorTree, "Liam", 14567890);
-    insert(gatorTree, "Mia", 25678901);
-    insert(gatorTree, "Nathan", 36789012);
-    insert(gatorTree, "Olivia", 47890123);
-    insert(gatorTree, "Peter", 58901234);
-    insert(gatorTree, "Quinn", 69012345);
-    insert(gatorTree, "Rachel", 70123456);
-    insert(gatorTree, "Samuel", 81234567);
-    insert(gatorTree, "Tina", 92345678);
-    insert(gatorTree, "Ulysses", 34561234);
-    insert(gatorTree, "Victoria", 45672345);
-    insert(gatorTree, "William", 56783456);
-    insert(gatorTree, "Xena", 67894567);
-    insert(gatorTree, "Yvonne", 78905678);
-    insert(gatorTree, "Zachary", 89016789);
-    insert(gatorTree, "Ashley", 90127890);
-    insert(gatorTree, "Benjamin", 98789012);
-    insert(gatorTree, "Catherine", 87690123);
-    insert(gatorTree, "Daniel", 76501234);
-    insert(gatorTree, "Emily", 65412345);
-    insert(gatorTree, "Felix", 54323456);
-    insert(gatorTree, "Gabriella", 43234567);
-    insert(gatorTree, "Henry", 32145678);
-    insert(gatorTree, "Isabella", 21056789);
-    insert(gatorTree, "Jacob", 10967890);
-    insert(gatorTree, "Katherine", 98778901);
-    insert(gatorTree, "Liam", 87689012);
-    insert(gatorTree, "Mia", 76590123);
-    insert(gatorTree, "Nathan", 65401234);
-    insert(gatorTree, "Olivia", 54312345);
-    insert(gatorTree, "Peter", 43223456);
-    insert(gatorTree, "Quinn", 32134567);
-    insert(gatorTree, "Rachel", 21045678);
-    insert(gatorTree, "Samuel", 98756789);
-    insert(gatorTree, "Tina", 87667890);
-    insert(gatorTree, "Ulysses", 76578901);
-    insert(gatorTree, "Victoria", 65489012);
-    insert(gatorTree, "William", 54390123);
-    insert(gatorTree, "Xena", 43201234);
-    insert(gatorTree, "Yvonne", 32112345);
-    insert(gatorTree, "Zachary", 21023456);
+    string command_cnt_str;
+    getline(input_txt, command_cnt_str);
+    int command_cnt = stoi(command_cnt_str);
 
-    search(gatorTree, 86230819);
-    search(gatorTree, "Alfred");
-    search(gatorTree, "Andrei");
-    printInorder(gatorTree);
-    printPostorder(gatorTree);
-    printPreorder(gatorTree);
-    printLevelCount(gatorTree);
-*/
+    while(command_cnt > 0){
+        string command;
+        string name;
+        string id_str;
+
+        getline(input_txt, command, ' ');
+
+        // Case: insert "NAME" 12345678
+        if(command == "insert"){
+            // Get arguments.
+            getline(input_txt, name, '"');
+            getline(input_txt, name, '"');
+            getline(input_txt, id_str);
+
+            // Check the arguments.
+            name = verifyName(name);
+            id_str = verifyID(id_str);
+
+            // If name or id is empty, command was unsuccessful.
+            if(name.empty() || id_str.empty())
+                cout << "unsuccessful" << endl;
+            else{
+               insert(gatorTree, name, stoi(id_str)); // Attempting to insert node if it doesn't exist.
+            }
+            cout << "successful" << endl;
+        }
+
+        // Case: remove 12345678
+        else if(command == "remove"){
+            // Get arguments.
+            getline(input_txt, id_str);
+            id_str = verifyID(id_str);
+            if(id_str.empty())
+                cout << "unsuccessful" << endl;
+            else{
+                remove(gatorTree,stoi(id_str));
+            }
+            cout << "successful" << endl;
+        }
+
+        // Case: search 12345678 or search "Jeff"
+        else if(command == "search"){
+            string next;
+            // Get arguments.
+            // Checking if it's the case of search 12345678 or search "Jeff"
+            if(next.find('"') != string::npos){
+                getline(input_txt, name, '"');
+                getline(input_txt, name, '"');
+
+                name = verifyName(name);
+                if(name.empty())
+                    cout << "unsuccessful" << endl;
+                else
+                    search(gatorTree, name);
+            }
+            else{
+                getline(input_txt, id_str);
+
+                id_str = verifyID(id_str);
+                if(id_str.empty())
+                    cout << "unsuccessful" << endl;
+                else
+                    search(gatorTree, stoi(id_str));
+            }
+        }
+
+        // Case: printInorder
+        else if(command == "printInorder"){
+            printInorder(gatorTree);
+        }
+
+        // Case: printPreorder
+        else if(command == "printPreorder"){
+            printPreorder(gatorTree);
+        }
+
+        // Case: printPostorder
+        else if(command == "printPostorder"){
+            printPostorder(gatorTree);
+        }
+
+        // Case: printLevelCount
+        else if(command == "printLevelCount"){
+            printLevelCount(gatorTree);
+        }
+
+        // Case: removeInorder
+        else if(command == "removeInorder"){
+            string N;
+            int x;
+            getline(input_txt, N);
+
+            try{
+                x = stoi(N);
+            }
+            catch (exception& e){
+                cout << "unsuccessful" << endl;
+            }
+
+            if(x > static_cast<int>(gatorTree.getTree().size()))
+                cout << "unsuccessful" << endl;
+            else
+                removeInorder(gatorTree, stoi(N));
+        }
+        else{
+            cout << "unsuccessful" << endl;
+        }
+
+        command_cnt--;
+    }
+
 	return 0;
 }
 
-string verifyID(istringstream& in){
-    string word;
-    in >> word;
+string verifyID(string& number){
 
-    if(word.length() > 8){
+    if(number.length() > 8){
         return "";
     }
 
-    for(char c : word){
+    for(char c : number){
         if(!isalpha(c)){
             return "";
         }
     }
-    return word;
+    return number;
 }
 
-string verifyName(istringstream& in){
-    string word;
-    in >> word;
-
-    if(word.length() > 8){
-        return "";
-    }
-
+string verifyName(string& word){
     for(char c : word){
         if(!isalpha(c) && !isdigit(c)){
             return "";
@@ -191,6 +224,6 @@ void printLevelCount(Gator_Tree& gatorTree){
     cout << to_string(gatorTree.getLevelCount()) << endl;
 }
 
-void removeInorder(int N){
-
+void removeInorder(Gator_Tree& gatorTree, int N){
+    gatorTree.deleteNodeInorder(N);
 }
