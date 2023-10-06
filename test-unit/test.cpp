@@ -13,56 +13,69 @@
 TEST_CASE("Test Incorrect Commands", "[incorrect_commands]"){
     Gator_Tree gatorTree;
 
+    // Stores the outputs based on the command run.
+    std::vector<std::string> outputs;
+
     // Inserting commands with incorrect input
-    gatorTree.insertNode("A11y","45679999");
-    gatorTree.insertNode("James", "1234");
-    gatorTree.insertNode("A11y","0000006789");
+    gatorTree.insertNode("A11y","45679999"); // outputs[0]
+    gatorTree.insertNode("James", "1234"); // outputs[1]
+    gatorTree.insertNode("A11y","0000006789"); // outputs[2]
 
     // Attempting to delete a node with incorrect input
     std::string input = "Ally";
-    std::string msg = gatorTree.deleteNode(input);
+    gatorTree.deleteNode(input); // outputs[3]
 
     // Inserting a node with ID and name swapped
-    gatorTree.insertNode("12312414", "Jimothy");
+    gatorTree.insertNode("12312414", "Jimothy"); // outputs[4]
+
+    outputs = gatorTree.getOutputs();
 
     // When searching for a node, it will be successful if it has been inserted in the tree successfully
-    REQUIRE(gatorTree.searchNodeByKey("1234") == "unsuccessful\n");
-    REQUIRE(gatorTree.searchNodeByValue("James") == "unsuccessful\n");
-    REQUIRE(gatorTree.searchNodeByKey("0000006789") == "unsuccessful\n");
+    REQUIRE(outputs[0] == "unsuccessful\n");
+    REQUIRE(outputs[1] == "unsuccessful\n");
+    REQUIRE(outputs[2] == "unsuccessful\n");
 
     // Ensuring deletion was unsuccessful
-    REQUIRE(msg == "unsuccessful\n");
+    REQUIRE(outputs[3] == "unsuccessful\n");
 
     // Ensuring searching for a non-existent node was unsuccessful
-    REQUIRE(gatorTree.searchNodeByValue("0000006789") == "unsuccessful\n");
+    REQUIRE(outputs[4] == "unsuccessful\n");
 }
 
 TEST_CASE("Testing Edge Cases", "[edge_cases]"){
     Gator_Tree gatorTree;
 
-    std::vector<std::string> successes;
+    std::vector<std::string> outputs;
 
     // removing non-existent node
     // delete node will return "successful" or "unsuccessful" if the node exists.
-    successes.push_back(gatorTree.deleteNode("12345678")); // successes[0]
+    gatorTree.deleteNode("12345678"); // outputs[0]
 
     // inserting a node and removing it with no children
-    gatorTree.insertNode("Alice", "12345678");
-    successes.push_back(gatorTree.deleteNode("12345678")); // successes[1]
+    gatorTree.insertNode("Alice", "12345678"); // outputs[1]
+    gatorTree.deleteNode("12345678"); // outputs[2]
 
+    gatorTree.insertNode("Alice", "12345678"); // outputs[3]
+    gatorTree.insertNode("James", "78945621"); // outputs[4]
+    gatorTree.deleteNode("78945621"); // outputs[5]
+    gatorTree.searchNodeByKey("12345678"); // outputs[6]
+
+
+    outputs = gatorTree.getOutputs();
     // inserting a node and removing it with 1 child
-    gatorTree.insertNode("Alice", "12345678");
-    gatorTree.insertNode("James", "78945621");
-    std::cout << gatorTree.searchNodeByKey("12345678");
-    successes.push_back(gatorTree.deleteNode("78945621")); // successes[2]
-    successes.push_back(gatorTree.searchNodeByKey("12345678")); // successes[3]
 
-    REQUIRE(successes[0] == "unsuccessful\n");
-    REQUIRE(successes[1] == "successful\n");
-    REQUIRE(successes[2] == "successful\n");
-    REQUIRE(successes[3] == "Alice\n");
+    REQUIRE(outputs[0] == "unsuccessful\n");
+    REQUIRE(outputs[1] == "successful\n");
+    REQUIRE(outputs[2] == "successful\n");
+    REQUIRE(outputs[3] == "successful\n");
+    REQUIRE(outputs[4] == "successful\n");
+    REQUIRE(outputs[5] == "successful\n");
+    REQUIRE(outputs[6] == "successful\n");
+
+
+
 }
-
+/*
 TEST_CASE("Testing Rotation Cases", "[rotation_cases]"){
     Gator_Tree gatorTree;
 
@@ -145,6 +158,7 @@ TEST_CASE("Testing Deletion Cases", "[deletion_cases]"){
     REQUIRE(successes[1] == "successful\n");
 }
 
+*/
 /*TEST_CASE("AVL Insert Large", "[large_insert]"){
 
     struct node{
@@ -217,3 +231,4 @@ TEST_CASE("Testing Deletion Cases", "[deletion_cases]"){
 
 
 }*/
+

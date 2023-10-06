@@ -33,21 +33,25 @@ private:
     std::string verifyID(std::string& number);
     std::string verifyName(std::string& word);
 
+    // Stores the outputs from each operation.
+    std::vector<std::string> outputs;
+
 public:
 	/*===== Constructor/Destructor =====*/
     Gator_Tree();
 	~Gator_Tree()= default;
 
 	/*===== Insertions =====*/
-	std::string insertNode(std::string name, std::string ID);
+	void insertNode(std::string name, std::string ID);
 
     /*===== Deletions =====*/
-    std::string deleteNode(std::string ID);
-    std::string deleteNodeInorder(int N);
+    void deleteNode(std::string ID);
+    void deleteNodeInorder(int N);
 
     /*===== Searching =====*/
-    std::string searchNodeByKey(std::string ID);
-    std::string searchNodeByValue(std::string name);
+    void searchNodeByKey(std::string ID);
+    void searchNodeByValue(std::string name);
+    bool searchNodeExists(std::string ID);
 
 	/*===== DFS Traversals =====*/
 	std::vector<std::string> inOrder();
@@ -65,6 +69,7 @@ public:
 
     Gator_Node* changeBalanceAndHeight(Gator_Node* root_);
 
-	/*===== Debugging =====*/
+	/*===== Accessors =====*/
 	std::vector<Gator_Node*> getTree();
+    std::vector<std::string> getOutputs(){ return this->outputs; };
 };
